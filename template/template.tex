@@ -1,0 +1,414 @@
+\documentclass[a4paper]{article}
+\usepackage[14pt]{extsizes}
+\usepackage[utf8]{inputenc}
+\usepackage[english,american,ukrainian]{babel}
+\usepackage{setspace,amsmath}
+\usepackage{kantlipsum}
+\usepackage[left=20mm, top=15mm, right=15mm, bottom=15mm, nohead, footskip=10mm]{geometry}
+\usepackage{enumitem}
+\setlist{leftmargin=15.5mm}
+\usepackage{graphicx}
+\pagestyle{empty}
+\graphicspath{ {./images/} }
+\usepackage{amsmath}
+\usepackage{makecell}
+\usepackage{times} 
+\renewcommand\theadalign{bc}
+\renewcommand\theadfont{\bfseries}
+\renewcommand\theadgape{\Gape[4pt]}
+\renewcommand\cellgape{\Gape[4pt]}
+ 
+\begin{document}
+ 
+\begin{center}
+\hfill \break
+\large{МІНІСТЕРСТВО ОСВІТИ ТА НАУКИ УКРАЇНИ}\\
+\large{НАЦІОНАЛЬНИЙ ТЕХНІЧНИЙ УНІВЕРСИТЕТ УКРАЇНИ}\\
+\large{''КИЇВСЬКИЙ ПОЛІТЕХНІЧНИЙ ІНСТИТУТ ІМЕНІ ІГОРЯ СІКОРСЬКОГО''}\\
+
+\hfill \break
+\normalsize{Кафедра автоматики та управління в технічних системах}\\
+\hfill\break
+\hfill \break
+\hfill \break
+\hfill \break
+\large{''Методи оптимізації в керуванні та управлінні–2.}\\
+\large{Прикладні задачі оптимального керування''}\\
+\hfill \break
+\hfill \break
+\hfill \break
+\normalsize{АКОР у задачі регулятора стану}\\
+\hfill \break
+\hfill \break
+\hfill \break
+\hfill \break
+\end{center}
+\hfill \break
+\hfill \break
+\begin{flushright} 
+Виконав ст. гр. IA-82мп\\
+{{studentName}}\\
+\hfill \break
+\hfill \break
+Перевірив доц. каф. АУТС\\
+Писаренко А.В.\\
+\end{flushright}
+\hfill \break
+\hfill \break
+\hfill \break
+\hfill \break
+\hfill \break
+\hfill \break
+\begin{center} Київ 2019 \end{center}
+ 
+% title end
+ 
+\newpage
+Тема: АКОР у задачі регулятора стану\\
+\hfill \break
+Порядок виконання\\
+\hfill \break
+\indent 1) Від заданої передавальної функції об’єкту керування перейти до
+векторно-матричної моделі (будь-яким методом).\\
+
+\hfill \break
+\indent 2) Дослідити керованість об’єкту.\\
+\hfill \break
+\indent 3) Розв’язати аналітично рівняння Ріккаті \\
+\hfill \break
+\indent 4) Виконати перевірку отриманих аналітично результатів за допомогою
+вбудованих можливостей MATLAB. Визначити вектор зворотних зв’язків за
+станами за допомогою команди \\
+\hfill \break
+\indent 5) Побудувати модель оптимальної системи у MATLAB/Simulink\\
+\hfill \break
+\indent 6) Дослідити, чи досягає критерій якості мінімального значення,
+заповнивши таблицю\\
+\hfill \break
+\indent 7) Зробити висновки.\\
+
+Хід роботи\\
+
+\hfill \break
+\indent 1. Перейдемо до векторно-матричної моделі за допомогою пакету
+MATLAB\\
+
+\begin{center}
+\includegraphics[width=0.5\textwidth]{functionInit}
+\end{center}
+
+\[
+A =
+\begin{bmatrix}
+    {{a11}} & {{a12}} \\
+    {{a21}} & {{a22}} \\
+\end{bmatrix},
+B =
+\begin{bmatrix}
+    {{b11}} \\ {{b21}}
+\end{bmatrix}
+\]
+
+\[
+C =
+\begin{bmatrix}
+    {{c11}} & {{c12}} \\
+\end{bmatrix},
+D =
+\begin{bmatrix}
+    0
+\end{bmatrix}
+\]
+
+\hfill \break
+\indent 2. Перевіримо керованість об’єкту\\
+
+\[
+P = \big[ B \; AB \big] = 
+\left[ 
+  \begin{array}{cc}
+
+\begin{matrix}
+{{b11}} \\
+{{b21}} \\
+\end{matrix}
+ & \begin{bmatrix}
+{{a11}} & {{a12}} \\
+{{a21}} & {{a22}}
+\end{bmatrix} * 
+\begin{bmatrix}
+{{b11}} \\ {{b21}}
+\end{bmatrix}
+\end{array}\right]
+=
+\begin{bmatrix}
+{{p11}} & {{p12}} \\
+{{p21}} & {{p22}}
+\end{bmatrix}
+\]
+
+\hfill \break
+\indent \indent n=rank(P)\\
+\hfill \break
+\indent \indent n=2 - система керована\\
+
+\hfill \break
+\indent 3. Аналітичне визначення рівняння Ріккаті\\
+
+\[
+Q =
+\begin{bmatrix}
+    {{originalQ11}} & 0 \\
+    0 & {{originalQ22}} \\
+\end{bmatrix}\\
+\]
+\[
+R = {{originalR}}
+\]
+
+\[
+-\hat{\boldsymbol{K}}\boldsymbol{A} - \boldsymbol{A}^T\hat{\boldsymbol{K}} + \hat{\boldsymbol{K}}\boldsymbol{B}\boldsymbol{r}^{-1}\boldsymbol{B}^T\hat{\boldsymbol{K}}-\boldsymbol{Q} = 0
+\]
+
+\[
+-\hat{\boldsymbol{K}}\boldsymbol{A} =
+-\begin{bmatrix}
+    k11 & k12 \\
+    k21 & k22 \\
+\end{bmatrix}\\ *
+\begin{bmatrix}
+    {{a11}} & {{a12}} \\
+    {{a21}} & {{a22}} \\
+\end{bmatrix}\\ = 
+\begin{bmatrix}
+    {{temporaryFirst11}} & {{temporaryFirst12}} \\
+    {{temporaryFirst21}} & {{temporaryFirst22}} \\
+\end{bmatrix}\\
+\]
+
+\[
+-\boldsymbol{A}^T\hat{\boldsymbol{K}} =
+-\begin{bmatrix}
+    {{a11}} & {{a21}} \\
+    {{a12}} & {{a22}} \\
+\end{bmatrix}\\ *
+\begin{bmatrix}
+    k11 & k12 \\
+    k21 & k22 \\
+\end{bmatrix}\\ = 
+\begin{bmatrix}
+    {{temporarySecond11}} & {{temporarySecond12}} \\
+    {{temporarySecond21}} & {{temporarySecond22}} \\
+\end{bmatrix}\\
+\]
+
+\[
+\hat{\boldsymbol{K}}\boldsymbol{B}\boldsymbol{r}^{-1}\boldsymbol{B}^T\hat{\boldsymbol{K}} =
+\begin{bmatrix}
+    k11 & k12 \\
+    k21 & k22 \\
+\end{bmatrix}\\ *
+\begin{bmatrix}
+    {{b11}} \\
+    {{b21}} \\
+\end{bmatrix}\\ *
+{{originalR}}^{-1} *
+\begin{bmatrix}
+    {{b11}} &&
+    {{b21}} 
+\end{bmatrix}\\
+\begin{bmatrix}
+    k11 & k12 \\
+    k21 & k22 \\
+\end{bmatrix}\\ = 
+\]
+
+\[
+\begin{bmatrix}
+    {{temporaryThird11}} & {{temporaryThird12}} \\
+    {{temporaryThird21}} & {{temporaryThird22}} \\
+\end{bmatrix}\\
+\]
+
+
+% here maybe problems with align
+\[
+\begin{bmatrix}
+    {{temporaryFirst11}} & {{temporaryFirst12}} \\
+    {{temporaryFirst21}} & {{temporaryFirst22}} \\
+\end{bmatrix}\\+
+\begin{bmatrix}
+    {{temporarySecond11}} & {{temporarySecond12}} \\
+    {{temporarySecond21}} & {{temporarySecond22}} \\
+\end{bmatrix}\\+
+\]
+\[
+\begin{bmatrix}
+    {{temporaryThird11}} & {{temporaryThird12}} \\
+    {{temporaryThird21}} & {{temporaryThird22}} \\
+\end{bmatrix}\\-
+\begin{bmatrix}
+    {{originalQ11}} & 0 \\
+    0 & {{originalQ22}} \\
+\end{bmatrix}\\ = 0
+\]
+\[
+\begin{bmatrix}
+    {{riccatiMatrix11}} & {{riccatiMatrix12}}\\
+    {{riccatiMatrix21}} & {{riccatiMatrix22}} \\
+\end{bmatrix}\\ = 0
+\]
+
+\begin{center}
+\hfill \break
+\big[ k11, k12, k21, k22 \big] = solve('${{riccatiMatrix11}}$', \\
+'${{riccatiMatrix12}}$',\\
+'${{riccatiMatrix21}}$',\\
+'${{riccatiMatrix22}}$')\\
+\end{center}
+\hfill \break
+\indent З декількох отриманих розв’язків для кожного коефіцієнту вибрати
+один, що відповідає властивості матриці , застосовуючи команди:\\
+\hfill \break
+\indent >> eig ([k11(1) k12(1); k21(1) k22(1)]) \\
+\indent ans = \\
+\indent {{eigResult11}} \\
+\indent {{eigResult12}} \\
+\indent >> eig ([k11({{eigResultTrueIndex}}) k12({{eigResultTrueIndex}}); k21({{eigResultTrueIndex}}) k22({{eigResultTrueIndex}})]) \\
+\indent ans = \\
+\indent {{eigResultTrue1}} \\
+\indent {{eigResultTrue2}} \\
+\hfill \break
+\indent Визначили що {{eigResultTrueIndex}}-й набір кращий
+\[
+\hat{\boldsymbol{K}} =
+\begin{bmatrix}
+    {{riccatiResult11}} & {{riccatiResult12}}\\
+    {{riccatiResult21}} & {{riccatiResult22}} \\
+\end{bmatrix}\\
+\]
+
+
+\hfill \break
+\indent Розрахувати вектор зворотних зв’язків за станами\\
+
+\[
+G = r^{-1}B^{T}\hat{\boldsymbol{K}} =
+{{originalR}}^{-1} *
+\begin{bmatrix}
+    {{b11}} & {{b21}}
+\end{bmatrix}\\ *
+\begin{bmatrix}
+    {{riccatiResult11}} & {{riccatiResult12}}\\
+    {{riccatiResult21}} & {{riccatiResult22}} \\
+\end{bmatrix}\\ =
+\begin{bmatrix}
+    {{backPropG11}} & {{backPropG12}}\\
+\end{bmatrix}\\
+\]
+
+
+\hfill \break
+\indent 4. Виконаємо перевірку командою\\
+\begin{center}
+g = lqr(A, B, Q , R)\\
+\hfill \break
+>> g = lqr(A, B, Q , r)\\
+\hfill \break
+g = \big[ {{backPropG11}} {{backPropG12}} \big] \\
+\hfill \break
+\end{center}
+
+\hfill \break
+\indent 5. Побудуємо модель оптимальної системи у MATLAB/Simulink\\
+\begin{center}
+\includegraphics[width=0.5\textwidth]{simulinkModel}
+\end{center}
+\begin{center}
+Рисунок 1 – Схема визначення екстремуму та тривалості перехідного процесу\\
+\end{center}
+\begin{center}
+\includegraphics[width=0.5\textwidth]{simulinkPlot}
+\end{center}
+\begin{center}
+Рисунок 2 – Графік змінних стану\\
+\end{center}
+
+\hfill \break
+\indent 6. Дослідити, чи досягає критерій якості мінімального значення
+
+\begin{center}
+Таблиця 1 - Критерій якості мінімального значення\\
+\end{center}
+
+\begin{center}
+\begin{tabular}{ |p{3cm}||p{3cm}|p{3cm}| }
+ \hline
+ \multicolumn{2}{|c|}{Змінюємо} & Отримуємо\\
+ \hline
+ $|g_{1}|$ & $|g_{2}|$ & J \\
+ \hline
+ {{table1Row1g1}} & {{table1Row1g2}} & {{table1Row1J}} \\
+ {{table1Row2g1}} & {{table1Row2g2}} & {{table1Row2J}} \\
+ {{table1Row3g1}} & {{table1Row3g2}} & {{table1Row3J}} \\
+ {{table1Row4g1}} & {{table1Row4g2}} & {{table1Row4J}} \\
+ {{table1Row5g1}} & {{table1Row5g2}} & {{table1Row5J}} \\
+ {{table1Row6g1}} & {{table1Row6g2}} & {{table1Row6J}} \\
+ {{table1Row7g1}} & {{table1Row7g2}} & {{table1Row7J}} \\
+ {{table1Row8g1}} & {{table1Row8g2}} & {{table1Row8J}} \\
+ {{table1Row9g1}} & {{table1Row9g2}} & {{table1Row9J}} \\
+ \hline
+\end{tabular}
+\end{center}
+
+\begin{center}
+Таблиця 2 - Критерій якості мінімального значення\\
+\end{center}
+
+\begin{center}
+\begin{tabular}{ |p{3cm}||p{3cm}||p{3cm}||p{3cm}||p{3cm}| }
+ \hline
+ \multicolumn{2}{|c|}{Змінюємо} & Розрахувати & \multicolumn{2}{|c|}{Отримати з моделі}\\
+ \hline
+ q11,q22 & r & $[g1,g2]$ & J & T\\
+ \hline
+ Задане & Задане & \makecell{ {{table2Row1g1}} \\ {{table2Row1g2}} } & {{table2Row1J}} & {{table2Row1T}} \\
+ > & Задане & \makecell{ {{table2Row2g1}} \\ {{table2Row2g2}} } & {{table2Row2J}} & {{table2Row2T}} \\
+ < & Задане & \makecell{ {{table2Row3g1}} \\ {{table2Row3g2}} } & {{table2Row3J}} & {{table2Row3T}} \\
+ Задане & > & \makecell{ {{table2Row4g1}} \\ {{table2Row4g2}} } & {{table2Row4J}} & {{table2Row4T}} \\
+ Задане & < & \makecell{ {{table2Row5g1}} \\ {{table2Row5g2}} } & {{table2Row5J}} & {{table2Row5T}} \\
+ > & > & \makecell{ {{table2Row6g1}} \\ {{table2Row6g2}} } & {{table2Row6J}} & {{table2Row6T}} \\
+ < & < & \makecell{ {{table2Row7g1}} \\ {{table2Row7g2}} } & {{table2Row7J}} & {{table2Row7T}} \\
+ > & < & \makecell{ {{table2Row8g1}} \\ {{table2Row8g2}} } & {{table2Row8J}} & {{table2Row8T}} \\
+ < & > & \makecell{ {{table2Row9g1}} \\ {{table2Row9g2}} } & {{table2Row9J}} & {{table2Row9T}} \\
+ \hline
+\end{tabular}
+\end{center}
+
+\begin{center}
+Висновки \\
+\end{center}
+
+\indent На даній розрахунковій роботі було досліджено АКОР у задачі
+регулятора стану. Результати отримані аналітично та за допомогою
+матлаб співпадають. Дослідження зміни критерію за рахунок зміни
+коефіцієнтів вектору зворотних зв’язків показали, що результат
+отриманий під час розрахунків дає найкращий критерій. Було
+проведено дослідження впливу коефіцієнтів матриць штрафів на
+критерій та на час перехідного процесу. \\
+\indent Експериментуючи зі зміною матриць штрафів Q та r показали:
+
+\begin{itemize}
+  \item Збільшення або зменшення матриць штрафів пропорційно впливає на
+зміну критерію та не впливає на час п.п.
+  \item Збільшення Q та зменшення r призведе до погіршення критерію, проте
+зменшить час пп.
+  \item При збільшенні лише матриці Q збільшиться критерій та зміниться час
+пп та навпаки при зменшенні.
+  \item Зміна матриці r призводить до аналогічних змін критерію та часу
+перехідного процесу.
+\end{itemize}
+
+\newpage
+ 
+\end{document}

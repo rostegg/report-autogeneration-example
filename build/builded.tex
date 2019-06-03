@@ -1,0 +1,413 @@
+\documentclass[a4paper]{article}
+\usepackage[14pt]{extsizes}
+\usepackage[utf8]{inputenc}
+\usepackage[english,american,ukrainian]{babel}
+\usepackage{setspace,amsmath}
+\usepackage{kantlipsum}
+\usepackage[left=20mm, top=15mm, right=15mm, bottom=15mm, nohead, footskip=10mm]{geometry}
+\usepackage{enumitem}
+\setlist{leftmargin=15.5mm}
+\usepackage{graphicx}
+\pagestyle{empty}
+\graphicspath{ {./images/} }
+\usepackage{amsmath}
+\usepackage{makecell}
+\renewcommand\theadalign{bc}
+\renewcommand\theadfont{\bfseries}
+\renewcommand\theadgape{\Gape[4pt]}
+\renewcommand\cellgape{\Gape[4pt]}
+ 
+\begin{document}
+ 
+\begin{center}
+\hfill \break
+\large{МІНІСТЕРСТВО ОСВІТИ ТА НАУКИ УКРАЇНИ}\\
+\large{НАЦІОНАЛЬНИЙ ТЕХНІЧНИЙ УНІВЕРСИТЕТ УКРАЇНИ}\\
+\large{''КИЇВСЬКИЙ ПОЛІТЕХНІЧНИЙ ІНСТИТУТ ІМЕНІ ІГОРЯ СІКОРСЬКОГО''}\\
+
+\hfill \break
+\normalsize{Кафедра автоматики та управління в технічних системах}\\
+\hfill\break
+\hfill \break
+\hfill \break
+\hfill \break
+\large{''Методи оптимізації в керуванні та управлінні–2.}\\
+\large{Прикладні задачі оптимального керування''}\\
+\hfill \break
+\hfill \break
+\hfill \break
+\normalsize{АКОР у задачі регулятора стану}\\
+\hfill \break
+\hfill \break
+\hfill \break
+\hfill \break
+\end{center}
+\hfill \break
+\hfill \break
+\begin{flushright} 
+Виконав ст. гр. IA-82мп\\
+Ніколаєнко Р.С.\\
+\hfill \break
+\hfill \break
+Перевірив доц. каф. АУТС\\
+Писаренко А.В.\\
+\end{flushright}
+\hfill \break
+\hfill \break
+\hfill \break
+\hfill \break
+\hfill \break
+\hfill \break
+\begin{center} Київ 2019 \end{center}
+ 
+% title end
+ 
+\newpage
+Тема: АКОР у задачі регулятора стану\\
+\hfill \break
+Порядок виконання\\
+\hfill \break
+\indent 1) Від заданої передавальної функції об’єкту керування перейти до
+векторно-матричної моделі (будь-яким методом).\\
+
+\hfill \break
+\indent 2) Дослідити керованість об’єкту.\\
+\hfill \break
+\indent 3) Розв’язати аналітично рівняння Ріккаті \\
+\hfill \break
+\indent 4) Виконати перевірку отриманих аналітично результатів за допомогою
+вбудованих можливостей MATLAB. Визначити вектор зворотних зв’язків за
+станами за допомогою команди \\
+\hfill \break
+\indent 5) Побудувати модель оптимальної системи у MATLAB/Simulink\\
+\hfill \break
+\indent 6) Дослідити, чи досягає критерій якості мінімального значення,
+заповнивши таблицю\\
+\hfill \break
+\indent 7) Зробити висновки.\\
+
+Хід роботи\\
+
+\hfill \break
+\indent 1. Перейдемо до векторно-матричної моделі за допомогою пакету
+MATLAB\\
+
+\begin{center}
+\includegraphics[width=0.5\textwidth]{functionInit}
+\end{center}
+
+\[
+A =
+\begin{bmatrix}
+    -8.333 & -3.858 \\
+    4 & 0 \\
+\end{bmatrix},
+B =
+\begin{bmatrix}
+    8 \\ 0
+\end{bmatrix}
+\]
+
+\[
+C =
+\begin{bmatrix}
+    0 & 4.147 \\
+\end{bmatrix},
+D =
+\begin{bmatrix}
+    0
+\end{bmatrix}
+\]
+
+\hfill \break
+\indent 2. Перевіримо керованість об’єкту\\
+
+\[
+P = \big[ B \; AB \big] = 
+\left[ 
+  \begin{array}{cc}
+
+\begin{matrix}
+8 \\
+0 \\
+\end{matrix}
+ & \begin{bmatrix}
+-8.333 & -3.858 \\
+4 & 0
+\end{bmatrix} * 
+\begin{bmatrix}
+8 \\ 0
+\end{bmatrix}
+\end{array}\right]
+=
+\begin{bmatrix}
+8 & -66.67 \\
+0 & 32
+\end{bmatrix}
+\]
+
+\hfill \break
+\indent \indent n=rank(P)\\
+\hfill \break
+\indent \indent n=2 - система керована\\
+
+\hfill \break
+\indent 3. Аналітичне визначення рівняння Ріккаті\\
+
+\[
+Q =
+\begin{bmatrix}
+    1 & 0 \\
+    0 & 2 \\
+\end{bmatrix}\\
+\]
+\[
+R = 10
+\]
+
+\[
+-\hat{\boldsymbol{K}}\boldsymbol{A} - \boldsymbol{A}^T\hat{\boldsymbol{K}} + \hat{\boldsymbol{K}}\boldsymbol{B}\boldsymbol{r}^{-1}\boldsymbol{B}^T\hat{\boldsymbol{K}}-\boldsymbol{Q} = 0
+\]
+
+\[
+-\hat{\boldsymbol{K}}\boldsymbol{A} =
+-\begin{bmatrix}
+    k11 & k12 \\
+    k21 & k22 \\
+\end{bmatrix}\\ *
+\begin{bmatrix}
+    -8.333 & -3.858 \\
+    4 & 0 \\
+\end{bmatrix}\\ = 
+\begin{bmatrix}
+    8.33k11 - 4.0k12 & 3.86k11 \\
+    8.33k21 - 4.0k22 & 3.86k21 \\
+\end{bmatrix}\\
+\]
+
+\[
+-\boldsymbol{A}^T\hat{\boldsymbol{K}} =
+-\begin{bmatrix}
+    -8.333 & 4 \\
+    -3.858 & 0 \\
+\end{bmatrix}\\ *
+\begin{bmatrix}
+    k11 & k12 \\
+    k21 & k22 \\
+\end{bmatrix}\\ = 
+\begin{bmatrix}
+    8.33k11 - 4.0k21 & 8.33k12 - 4.0k22 \\
+    3.86k11 & 3.86k12 \\
+\end{bmatrix}\\
+\]
+
+\[
+\hat{\boldsymbol{K}}\boldsymbol{B}\boldsymbol{r}^{-1}\boldsymbol{B}^T\hat{\boldsymbol{K}} =
+\begin{bmatrix}
+    k11 & k12 \\
+    k21 & k22 \\
+\end{bmatrix}\\ *
+\begin{bmatrix}
+    8 \\
+    0 \\
+\end{bmatrix}\\ *
+10^{-1} *
+\begin{bmatrix}
+    8 &&
+    0 
+\end{bmatrix}\\
+\begin{bmatrix}
+    k11 & k12 \\
+    k21 & k22 \\
+\end{bmatrix}\\ = 
+\]
+
+\[
+\begin{bmatrix}
+    6.4k11^2 & 6.4k11k12 \\
+    6.4k11k21 & 6.4k12k21 \\
+\end{bmatrix}\\
+\]
+
+
+% here maybe problems with align
+\[
+\begin{bmatrix}
+    8.33k11 - 4.0k12 & 3.86k11 \\
+    8.33k21 - 4.0k22 & 3.86k21 \\
+\end{bmatrix}\\+
+\begin{bmatrix}
+    8.33k11 - 4.0k21 & 8.33k12 - 4.0k22 \\
+    3.86k11 & 3.86k12 \\
+\end{bmatrix}\\+
+\]
+\[
+\begin{bmatrix}
+    6.4k11^2 & 6.4k11k12 \\
+    6.4k11k21 & 6.4k12k21 \\
+\end{bmatrix}\\-
+\begin{bmatrix}
+    1 & 0 \\
+    0 & 2 \\
+\end{bmatrix}\\ = 0
+\]
+\[
+\begin{bmatrix}
+    16.7k11 - 4.0k12 - 4.0k21 + 6.4k11^2 - 1.0 & 3.86k11 + 8.33k12 - 4.0k22 + 6.4k11k12\\
+    3.86k11 + 8.33k21 - 4.0k22 + 6.4k11k21 & 3.86k12 + 3.86k21 + 6.4k12k21 - 2.0 \\
+\end{bmatrix}\\ = 0
+\]
+
+\begin{center}
+\hfill \break
+\big[ k11, k12, k21, k22 \big] = solve('$16.7k11 - 4.0k12 - 4.0k21 + 6.4k11^2 - 1.0$', \\
+'$3.86k11 + 8.33k12 - 4.0k22 + 6.4k11k12$',\\
+'$3.86k11 + 8.33k21 - 4.0k22 + 6.4k11k21$',\\
+'$3.86k12 + 3.86k21 + 6.4k12k21 - 2.0$')\\
+\end{center}
+\hfill \break
+\indent З декількох отриманих розв’язків для кожного коефіцієнту вибрати
+один, що відповідає властивості матриці , застосовуючи команди:\\
+\hfill \break
+\indent >> eig ([k11(1) k12(1); k21(1) k22(1)]) \\
+\indent ans = \\
+\indent 0.13217341255021436209199436743868 \\
+\indent -2.7738656470693647783195315998607 \\
+\indent >> eig ([k11(4) k12(4); k21(4) k22(4)]) \\
+\indent ans = \\
+\indent 0.74381349181215887844097862110893 \\
+\indent 0.074119002167672641904990866293776 \\
+\hfill \break
+\indent Визначили що 4-й набір кращий
+\[
+\hat{\boldsymbol{K}} =
+\begin{bmatrix}
+    0.1559 & 0.2193\\
+    0.2193 & 0.6620 \\
+\end{bmatrix}\\
+\]
+
+
+\hfill \break
+\indent Розрахувати вектор зворотних зв’язків за станами\\
+
+\[
+G = r^{-1}B^{T}\hat{\boldsymbol{K}} =
+10^{-1} *
+\begin{bmatrix}
+    8 & 0
+\end{bmatrix}\\ *
+\begin{bmatrix}
+    0.1559 & 0.2193\\
+    0.2193 & 0.6620 \\
+\end{bmatrix}\\ =
+\begin{bmatrix}
+    0.1247 & 0.1754\\
+\end{bmatrix}\\
+\]
+
+
+\hfill \break
+\indent 4. Виконаємо перевірку командою\\
+\begin{center}
+g = lqr(A, B, Q , R)\\
+\hfill \break
+>> g = lqr(A, B, Q , r)\\
+\hfill \break
+g = \big[ 0.1247 0.1754 \big] \\
+\hfill \break
+\end{center}
+
+\hfill \break
+\indent 5. Побудуємо модель оптимальної системи у MATLAB/Simulink\\
+\begin{center}
+\includegraphics[width=0.5\textwidth]{simulinkModel}
+\end{center}
+\begin{center}
+Рисунок 1 – Схема визначення екстремуму та тривалості перехідного процесу\\
+\end{center}
+\begin{center}
+\includegraphics[width=0.5\textwidth]{simulinkPlot}
+\end{center}
+\begin{center}
+Рисунок 2 – Графік змінних стану\\
+\end{center}
+
+\hfill \break
+\indent 6. Дослідити, чи досягає критерій якості мінімального значення
+
+\begin{center}
+Таблиця 1 - Критерій якості мінімального значення\\
+\end{center}
+
+\begin{center}
+\begin{tabular}{ |p{3cm}||p{3cm}|p{3cm}| }
+ \hline
+ \multicolumn{2}{|c|}{Змінюємо} & Отримуємо\\
+ \hline
+ $|g_{1}|$ & $|g_{2}|$ & J \\
+ \hline
+ 0.1247 & 0.1754 & 0.1256 \\
+ 1.125 & 0.1754 & 0.1923 \\
+ -0.8753 & 0.1754 & 0.9814 \\
+ 0.1247 & 1.175 & 0.3583 \\
+ 0.1247 & -0.8246 & 8.522e+306 \\
+ 1.125 & 1.175 & 0.2762 \\
+ -0.8753 & -0.8246 & 3.314e+306 \\
+ 1.125 & -0.8246 & 9.956e+264 \\
+ -0.8753 & 1.175 & 2.528 \\
+ \hline
+\end{tabular}
+\end{center}
+
+\begin{center}
+Таблиця 2 - Критерій якості мінімального значення\\
+\end{center}
+
+\begin{center}
+\begin{tabular}{ |p{3cm}||p{3cm}||p{3cm}||p{3cm}||p{3cm}| }
+ \hline
+ \multicolumn{2}{|c|}{Змінюємо} & Розрахувати & \multicolumn{2}{|c|}{Отримати з моделі}\\
+ \hline
+ q11,q22 & r & $[g1,g2]$ & J & T\\
+ \hline
+ Задане & Задане & \makecell{ 0.1247 \\ 0.1754 } & 0.1256 & 2.525 \\
+ > & Задане & \makecell{ 0.7182 \\ 1.012 } & 0.8740 & 1.975 \\
+ < & Задане & \makecell{ 0.01445 \\ 0.02031 } & 0.01398 & 3.309 \\
+ Задане & > & \makecell{ 0.01445 \\ 0.02031 } & 0.1398 & 3.278 \\
+ Задане & < & \makecell{ 0.7182 \\ 1.012 } & 0.08740 & 1.829 \\
+ > & > & \makecell{ 0.1247 \\ 0.1754 } & 1.256 & 2.441 \\
+ < & < & \makecell{ 0.1247 \\ 0.1754 } & 0.01256 & 2.420 \\
+ > & < & \makecell{ 2.844 \\ 4.016 } & 0.5601 & 1.524 \\
+ < & > & \makecell{ 0.001472 \\ 0.002069 } & 0.01418 & 3.352 \\
+ \hline
+\end{tabular}
+\end{center}
+
+\begin{center}
+Висновки \\
+\end{center}
+
+\indent На даній розрахунковій роботі було досліджено АКОР у задачі
+регулятора стану. Результати отримані аналітично та за допомогою
+матлаб співпадають. Дослідження зміни критерію за рахунок зміни
+коефіцієнтів вектору зворотних зв’язків показали, що результат
+отриманий під час розрахунків дає найкращий критерій. Було
+проведено дослідження впливу коефіцієнтів матриць штрафів на
+критерій та на час перехідного процесу. \\
+\indent Експериментуючи зі зміною матриць штрафів Q та r показали:
+
+\begin{itemize}
+  \item Збільшення або зменшення матриць штрафів пропорційно впливає на
+зміну критерію та не впливає на час п.п.
+  \item Збільшення Q та зменшення r призведе до погіршення критерію, проте
+зменшить час пп.
+  \item При збільшенні лише матриці Q збільшиться критерій та зміниться час
+пп та навпаки при зменшенні.
+  \item Зміна матриці r призводить до аналогічних змін критерію та часу
+перехідного процесу.
+\end{itemize}
+
+\newpage
+ 
+\end{document}
