@@ -17,9 +17,9 @@ After this templat can be generated into prepared report.
 This is a simple but effective concept that can be expanded and applied where you do not want to constantly engage in paperwork.
 
 ## Requirements
-nodejs v8 > (as simple template engine analogue)  
-texlive-latex-base  
-matlab (in example simulink model wath builded in 2018a)  
+* nodejs v8 > (as simple template engine analogue)  
+* texlive-latex-base  
+* matlab (in example simulink model wath builded in 2018a)  
 
 ## How to run?
 
