@@ -30,3 +30,25 @@ This is a simple but effective concept that can be expanded and applied where yo
 
 For image use in our case in folder `build` and `template` there is an `images` folder, where all the necessary images are stored.   
 In `template.tex` you can edit `\graphicspath{ {./images/} }` for new path and insert image using `\includegraphics{fileName}`
+## Tips and tricks
+
+### How to automaticly generate charts from simulink?
+Just save simulink output to matlab variable, then:  
+```
+% outputSignal - saved output from simulink
+figure;
+plot(outputSignal.Time, outputSignal .Data);
+% setup y and x axis limits
+ylim([-1 1]);
+xlim([-1 1]);
+saveas(gcf,'outputSignal.jpg');
+close;
+```
+### How to automaticly make screenshot of simulink model?
+Create model file `modelName.slx`, which contains only one model, then:
+```
+modelName
+print('-smodelName','-djpeg','modelName')
+close_system;
+```
+
